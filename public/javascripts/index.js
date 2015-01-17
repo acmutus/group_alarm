@@ -14,10 +14,10 @@ $(function() {
     		success: function(data){
     			if (!data.status) {
     				if (data.exists) {
-    					$("#groups").append("<p>Password is invalid</p>");
+    					$("#groups").html("<p>Password is invalid</p>");
     				}
     				else {
-    					$("#groups").append("<p>Username is not valid</p>");
+    					$("#groups").html("<p>Username is not valid</p>");
     				}
     			}
     			else {

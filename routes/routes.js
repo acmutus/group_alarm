@@ -66,6 +66,11 @@ exports.login = function(req, res) {
 	});
 }
 
+exports.logout = function(req, res) {
+	req.session.username = null;
+	res.redirect('/');
+}
+
 /* Route for sign ups*/
 exports.signup = function(req, res) {
 	console.log(req.body.username);
