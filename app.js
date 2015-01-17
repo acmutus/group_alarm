@@ -46,6 +46,7 @@ users.init(function () {
 			app.get('/logout', routes.logout);
 			app.get('/createGroup', routes.createGroup);
 			app.get('/suggest/:term', routes.getSuggestions);
+			app.post('/search', routes.getSearch);
 			app.post('/login', routes.login);
 			
 	

@@ -152,6 +152,35 @@ exports.getSuggestions = function(req, res) {
 	});
 }
 
+exports.getSearch = function(req, res) {
+	var term = req.body.query.toString().toLowerCase();
+	users.scanKeys(function(err, userSet) {	
+		if (userSet) {
+			var count = 0;
+			var i;
+			var result = [];
+			for (i = 0; i < userSet.length; i++) {
+				users.getSet(userSet[i].toString(), function(err, value) {
+					if (value) {
+						count++;
+						var parsedValue = JSON.parse(value);
+						var username = parsedValue.username;
+						if (username.toLowerCase().substring(0, term.length) == term) {
+							var arrValue =  username;
+							result.push(arrValue);
+						}
+					}
+					if (count == userSet.length) {
+						console.log("Search result: " + result.toString());
+						return res.send(result);						
+					}
+				});
+			}
+			
+		}		
+	});
+}
+
 /* Route to connect to the core*/
 exports.connect = function(req, res) {
 	core.on('Acceleration' , function(data) {
