@@ -25,16 +25,29 @@ app.use(express.session({secret: 'sick_secret_bruh'}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+var aws = require("./keyvaluestore.js");
+
+var users = new aws('GroupAlarm_users');
+var groups = new aws('GroupAlarm_groups');
+
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.post('/signup', routes.signup)
-app.get('/signup', routes.getsignup);
-app.get('/connect' , routes.connect);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+users.init(function () {
+	groups.init(function() {
+		routes.init(users, groups, function () {
+			app.get('/', routes.index);
+			app.post('/signup', routes.signup)
+			app.get('/signup', routes.getsignup);
+			app.get('/connect' , routes.connect);
+			app.get('/home' , routes.home);
+			app.post('/login', routes.login);
+	
+			http.createServer(app).listen(app.get('port'), function(){
+			  console.log('Express server listening on port ' + app.get('port'));
+				});
+		});
+	});
 });

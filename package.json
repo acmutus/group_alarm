@@ -9,6 +9,8 @@
     "express": "3.4.7",
     "ejs": "*",
     "request": "*",
-    "sparknode" : "*"	
+    "sparknode" : "*",
+	"aws-sdk": "*",
+	"lru-cache": "2.5.x"
   }
 }

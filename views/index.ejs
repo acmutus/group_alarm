@@ -16,13 +16,13 @@
 <body>
 <h1>GROUP ALARM</h1>
 <h2>Wake up together</h2>
-<form>
+<form id='login_details'>
 	<div class = "form-group">
-		<input class = "form-control" type="text" id="username" placeholder = "Username">
-		<input class = "form-control" type="text" id="password" placeholder = "Password">
-    	<input class = "form-control btn-primary" type = "submit" id = "login" value="Log In">
+		<input class = "form-control" type="text" id="username" name="username" placeholder = "Username">
+		<input class = "form-control" type="text" id="password" name="password" placeholder = "Password">
     </div>
 </form>
+<button class = "form-control btn-primary" id="login">Login</button>
 <a href="/signup">Sign Up</a>
 <a href='/connect'>Connect</a>
 <div id = "groups">
