@@ -3,13 +3,15 @@ $(function() {
 		e.preventDefault();
 		var username = $("#username").val();
 		var password = $("#password").val();
+		var email = $("#email").val();
 
 		$.ajax({ 
     		url: '/signup',
     		type: 'POST', 
     		data: { 
     			"username": username,
-    			"password": password
+    			"password": password,
+    			"email": email
     		}, 
     		success: function(data){
     			$("#groups").append("<p>My groups</p>");
