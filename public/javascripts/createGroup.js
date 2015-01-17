@@ -17,7 +17,7 @@ $(function() {
     			}
     			$(".addButton").click(function(e) {
     				e.preventDefault();
-    				var username = $(this).id;
+    				var username = this.id;
     				$.ajax({ 
     		    		url: '/addToGroup',
     		    		type: 'POST',
@@ -37,9 +37,7 @@ $(function() {
     			alert(err);
     		}
     	});
-	});
-	
-	
+	});	
 });
 
 

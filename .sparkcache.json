@@ -1,1 +1,1 @@
-[{"id":"53ff6b066667574847202567","name":"snitch","connected":true,"variables":{"acc_x":"double","acc_y":"double","acc_z":"double","result":"string"},"functions":[],"cc3000_patch_version":"1.29"}]
+[{"id":"53ff6b066667574847202567","name":"snitch","connected":true,"variables":{"acc_x":"double","acc_y":"double","acc_z":"double"},"functions":[],"cc3000_patch_version":"1.29"}]

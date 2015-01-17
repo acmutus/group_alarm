@@ -5,10 +5,14 @@ var crypto = require('crypto');
 
 var users;
 var groups;
+var groupIds;
 
-exports.init = function(usrs, grps, callback) {
+var groupId = 1;
+
+exports.init = function(usrs, grps, grpIds, callback) {
 	users = usrs;
 	groups = grps;
+	groupIds = grpIds
 	callback();
 }
 /* Initialize the Spark Core with the access token and core id*/
@@ -26,6 +30,9 @@ exports.index = function(req, res){
 };
 
 exports.home = function(req, res) {
+	if(req.session.username == null) {
+		res.redirect("/");
+	}
 	res.render('home' , {title: 'Home'});
 }
 
@@ -117,8 +124,46 @@ exports.getsignup = function(req, res) {
 	res.render('signup' , {title : 'Signup'});
 }
 
-exports.createGroup = function(req, res) {
+exports.getCreateGroup = function(req, res) {
 	res.render('createGroup' , {title: "Group Creation"});
+}
+
+exports.createGroup = function(req, res) {
+	console.log(typeof(req.params.groupAlarm));
+	var groupName = req.params.groupName.toLowerCase().trim();
+	var groupAlarm = req.params.groupAlarm.toLowerCase().trim();
+	var groupInterval = req.params.groupInterval.toLowerCase().trim();
+
+	groupIds.scanKeys(function(err, data) {
+		if(data.length != 0) {
+			groupId = Math.max.apply(null, data);
+			groupId++;
+
+		}
+		console.log("group id:  " +  groupId);
+		var value = {
+			"group_name" : groupName,
+			"owner" : req.session.username,
+			"alarm_time" : groupAlarm,
+			"alarm_interval" : groupInterval,
+			"members" : ""
+		}
+		groups.addToSet(groupName, JSON.stringify(value), function(err, data2) {
+			if (data2) {
+
+				var value2 = {
+					"group_name": groupName
+				}
+				groupIds.addToSet(groupId.toString().trim(), JSON.stringify(value2), function(err, data3) {
+					if(data3) {
+						req.session.current_groupId = groupId.toString().trim();
+						res.send(true);
+					}
+				});
+			}
+		});
+		
+	});
 }
 
 exports.getSuggestions = function(req, res) {
@@ -179,6 +224,40 @@ exports.getSearch = function(req, res) {
 			
 		}		
 	});
+}
+
+exports.addToGroup = function(req, res) {
+	var username = req.body.username;
+	var groupId = req.session.current_groupId.toString().trim();
+
+	groupIds.getSet(groupId, function(err, data) {
+		if(data) {
+			var parsedValue = JSON.parse(data);
+			var group_name = parsedValue.group_name.toString().trim();
+			groups.getSet(group_name, function(err, data2) {
+				if(data2) {
+					var oldValue = JSON.parse(data2);
+					groups.delSet(group_name, function(err, data3) {
+						if (data3) {
+							if (oldValue.members.length == 0) {
+								oldValue.members = [username];
+							}
+							else {
+								oldValue.members.push(username);
+							}
+							groups.addToSet(group_name, JSON.stringify(oldValue), function(err, data4) {
+								if(data4) {
+									res.send(true);
+								}
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+
+
 }
 
 /* Route to connect to the core*/
