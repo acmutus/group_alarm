@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src = "javascripts/createGroup.js"></script>
+	<style type="text/css">
+		form {
+			width: 30%;
+		}
+
+		input {
+			margin-top: 5%;
+		}
+	</style>
+</head>
+<body>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+   		<div class="nav navbar-left dropdown">
+   		<form class="navbar-form navbar-left" role="search">
+       	 <div class="form-group">
+    		<input data-toggle ="dropdown" type="text" class="form-control" name ="search" id="searchInput" placeholder="Search" onKeyUp="updateSuggestions()">
+        </div>	
+        	<button id ="searchButton" type="button" class="btn btn-default" aria-label="Search">
+  				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+			</button>
+		</form>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			</ul>
+		</div><!-- nav navbar left -->
+    </div><!-- navbar-collapse -->
+</body>

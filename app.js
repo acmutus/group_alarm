@@ -43,8 +43,11 @@ users.init(function () {
 			app.get('/signup', routes.getsignup);
 			app.get('/connect' , routes.connect);
 			app.get('/home' , routes.home);
-			app.post('/login', routes.login);
 			app.get('/logout', routes.logout);
+			app.get('/createGroup', routes.createGroup);
+			app.get('/suggest/:term', routes.getSuggestions);
+			app.post('/login', routes.login);
+			
 	
 			http.createServer(app).listen(app.get('port'), function(){
 			  console.log('Express server listening on port ' + app.get('port'));

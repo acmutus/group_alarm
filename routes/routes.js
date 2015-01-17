@@ -66,11 +66,6 @@ exports.login = function(req, res) {
 	});
 }
 
-exports.logout = function(req, res) {
-	req.session.username = null;
-	res.redirect('/');
-}
-
 /* Route for sign ups*/
 exports.signup = function(req, res) {
 	console.log(req.body.username);
@@ -122,10 +117,50 @@ exports.getsignup = function(req, res) {
 	res.render('signup' , {title : 'Signup'});
 }
 
+exports.createGroup = function(req, res) {
+	res.render('createGroup' , {title: "Group Creation"});
+}
+
+exports.getSuggestions = function(req, res) {
+	var term = req.params.term.toLowerCase().trim();
+	users.scanKeys(function(err, userSet) {	
+		if (userSet) {
+			var count = 0;
+			var i;
+			var result = []
+			for (i = 0; i < userSet.length; i++) {
+				users.getSet(userSet[i].toString(), function(err, value) {
+					if (value) {
+						count++;
+						var parsedValue = JSON.parse(value);
+						var username = parsedValue.username.toString();
+						if (username.toLowerCase().substring(0, term.length) ==  term) {
+							console.log(username);
+							result.push(username);
+						}
+					}
+					if (count == userSet.length) {
+						res.send({
+							'suggestions': result
+						});
+					}
+				});
+			}
+			
+		}
+		
+	});
+}
+
 /* Route to connect to the core*/
 exports.connect = function(req, res) {
 	core.on('Acceleration' , function(data) {
 		console.log("Data received");
 		console.log(data);
 	});
+}
+
+exports.logout = function(req, res) {
+	req.session.username = null;
+	res.redirect('/');
 }
