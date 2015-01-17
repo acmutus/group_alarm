@@ -8,6 +8,8 @@ var index = function(req, res){
 };
 
 var signup = function(req, res) {
+	console.log(req.body.username);
+	
 	res.send(true);
 }
 
