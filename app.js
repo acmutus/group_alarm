@@ -43,7 +43,7 @@ users.init(function () {
 			app.get('/', routes.index);
 			app.post('/signup', routes.signup)
 			app.get('/signup', routes.getsignup);
-			app.get('/connect' , routes.connect);
+			//app.get('/connect' , routes.connect);
 			app.get('/home' , routes.home);
 			app.get('/logout', routes.logout);
 			app.get('/createGroup/', routes.getCreateGroup);

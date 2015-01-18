@@ -1,6 +1,6 @@
 
 
-var spark = require('sparknode');
+//var spark = require('sparknode');
 var crypto = require('crypto');
 
 var users;
@@ -12,14 +12,14 @@ var groupId = 1;
 exports.init = function(usrs, grps, grpIds, callback) {
 	users = usrs;
 	groups = grps;
-	groupIds = grpIds
+	groupIds = grpIds;
 	callback();
 }
 /* Initialize the Spark Core with the access token and core id*/
-var core = new spark.Core({
-	accessToken: '1d4cceaa50b56cd19a8e8ee0424321139dfcd920',
-	id: '53ff6b066667574847202567'
-});
+// var core = new spark.Core({
+// 	accessToken: '1d4cceaa50b56cd19a8e8ee0424321139dfcd920',
+// 	id: '53ff6b066667574847202567'
+// });
 
 /*
  * GET home page.
@@ -261,12 +261,12 @@ exports.addToGroup = function(req, res) {
 }
 
 /* Route to connect to the core*/
-exports.connect = function(req, res) {
-	core.on('Acceleration' , function(data) {
-		console.log("Data received");
-		console.log(data);
-	});
-}
+// exports.connect = function(req, res) {
+// 	core.on('Acceleration' , function(data) {
+// 		console.log("Data received");
+// 		console.log(data);
+// 	});
+// }
 
 exports.logout = function(req, res) {
 	req.session.username = null;
