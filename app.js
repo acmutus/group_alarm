@@ -30,6 +30,7 @@ var aws = require("./keyvaluestore.js");
 var users = new aws('GroupAlarm_users');
 var groups = new aws('GroupAlarm_groups');
 var groupIds = new aws('GroupAlarm_groupIds');
+var userIds = new aws('GroupAlarm_userIds');
 
 // development only
 if ('development' == app.get('env')) {
@@ -39,25 +40,27 @@ if ('development' == app.get('env')) {
 users.init(function () {
 	groups.init(function() {
 		groupIds.init(function() {
-			routes.init(users, groups, groupIds, function () {
-			app.get('/', routes.index);
-			app.post('/signup', routes.signup)
-			app.get('/signup', routes.getsignup);
-			//app.get('/connect' , routes.connect);
-			app.get('/home' , routes.home);
-			app.get('/logout', routes.logout);
-			app.get('/createGroup/', routes.getCreateGroup);
-			app.get('/createGroup/:groupName/:groupAlarm/:groupInterval', routes.createGroup);
-			app.get('/suggest/:term', routes.getSuggestions);
-			app.post('/search', routes.getSearch);
-			app.post('/login', routes.login);
-			app.post('/addToGroup', routes.addToGroup);
+			userIds.init(function () {
+				routes.init(users, groups, groupIds, userIds, function () {
+					app.get('/', routes.index);
+					app.post('/signup', routes.signup)
+					app.get('/signup', routes.getsignup);
+					app.get('/home' , routes.home);
+					app.get('/logout', routes.logout);
+					app.get('/createGroup/', routes.getCreateGroup);
+					app.get('/createGroup/:groupName/:groupAlarm/:groupInterval', routes.createGroup);
+					app.get('/suggest/:term', routes.getSuggestions);
+					app.post('/search', routes.getSearch);
+					app.post('/login', routes.login);
+					app.post('/addToGroup', routes.addToGroup);
+					
 			
-	
-			http.createServer(app).listen(app.get('port'), function(){
-			  console.log('Express server listening on port ' + app.get('port'));
-				});
+					http.createServer(app).listen(app.get('port'), function(){
+					  console.log('Express server listening on port ' + app.get('port'));
+						});
+					});
+				});	
 			});
-		});	
+		});
 	});
-});
+			

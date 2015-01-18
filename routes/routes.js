@@ -6,24 +6,18 @@ var crypto = require('crypto');
 var users;
 var groups;
 var groupIds;
+var userIds;
 
 var groupId = 1;
+var userId = 1;
 
-exports.init = function(usrs, grps, grpIds, callback) {
+exports.init = function(usrs, grps, grpIds, usrIds, callback) {
 	users = usrs;
 	groups = grps;
 	groupIds = grpIds;
+	userIds = usrIds;
 	callback();
 }
-/* Initialize the Spark Core with the access token and core id*/
-// var core = new spark.Core({
-// 	accessToken: '1d4cceaa50b56cd19a8e8ee0424321139dfcd920',
-// 	id: '53ff6b066667574847202567'
-// });
-
-/*
- * GET home page.
- */
 
 exports.index = function(req, res){
   res.render('index', { title: 'Home' });
@@ -75,7 +69,6 @@ exports.login = function(req, res) {
 
 /* Route for sign ups*/
 exports.signup = function(req, res) {
-	console.log(req.body.username);
 	var username = req.body.username.toString().trim();
 	var password = req.body.password.toString().trim();
 	var email = req.body.email.toString().trim();
@@ -92,22 +85,33 @@ exports.signup = function(req, res) {
 	
 	users.exists(username, function(err, data) {
 		if(!data) {
-			var value = {
-				'username' : username,
-				'password' : shasum.digest('hex'),
-				'email': email	
-			};
-			users.addToSet(username, JSON.stringify(value), function(err, success) {
-				if (success) {
-					console.log("Got here");
-					res.send({
-						'status' : true,
-						'exists' : false 
-					});
+			userIds.scanKeys(function(err, data2) {
+				if (data2.length != 0) {
+					userId = Math.max.apply(null, data2);
+					userId++;
 				}
+				var value = {
+					'username' : username,
+					'password' : shasum.digest('hex'),
+					'email': email,
+					'userId' : userId
+				};
+				users.addToSet(username, JSON.stringify(value), function(err, success) {
+					if (success) {
+						var value2 = {
+							"username" : username	
+						};
+						userIds.addToSet(userId.toString().trim(), JSON.stringify(value2), function(err, success2) {
+							res.send({
+								'status' : true,
+								'exists' : false 
+							});
+						});
+					}	
 				else {
 					console.log("Erorr in add to set : " + err);
 				}
+			});
 			});
 		}
 		else {
@@ -129,10 +133,11 @@ exports.getCreateGroup = function(req, res) {
 }
 
 exports.createGroup = function(req, res) {
-	console.log(typeof(req.params.groupAlarm));
 	var groupName = req.params.groupName.toLowerCase().trim();
 	var groupAlarm = req.params.groupAlarm.toLowerCase().trim();
 	var groupInterval = req.params.groupInterval.toLowerCase().trim();
+	console.log(groupName);
+	console.log(groupAlarm);
 
 	groupIds.scanKeys(function(err, data) {
 		if(data.length != 0) {
@@ -210,8 +215,12 @@ exports.getSearch = function(req, res) {
 						count++;
 						var parsedValue = JSON.parse(value);
 						var username = parsedValue.username;
+						var userId = parsedValue.userId;
 						if (username.toLowerCase().substring(0, term.length) == term) {
-							var arrValue =  username;
+							var arrValue =  {
+									"username" : username,
+									"userId" : userId
+							}
 							result.push(arrValue);
 						}
 					}
